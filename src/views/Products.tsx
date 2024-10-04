@@ -1,5 +1,5 @@
-import { Link, useLoaderData } from 'react-router-dom'
-import { getProduct } from '../services/ProductService'
+import { ActionFunctionArgs, Link, useLoaderData } from 'react-router-dom'
+import { getProduct, updateProductAvailability } from '../services/ProductService'
 import ProductDetails from '../components/ProductDetails'
 import { Product } from '../types'
 export async function loader() {
@@ -7,10 +7,19 @@ export async function loader() {
     if (!products) {
     return [];  
   }
+
+
   
-console.log(products)
+
   return products
 }
+
+export async function action({ request }: ActionFunctionArgs) {
+    const data = Object.fromEntries(await request.formData())
+ await updateProductAvailability(+data.id)
+  
+    return {}
+  }
 
 const Products = () => {
   const products = useLoaderData() as Product[];
